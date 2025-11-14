@@ -164,211 +164,220 @@ header img {
       border: 0;
     }
   </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["MedicalBusiness", "LocalBusiness"],
+      "@id": "https://earinc.com/#organization",
+      "name": "EAR Customized Hearing Protection",
+      "url": "https://earinc.com",
+      "logo": "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg",
+      "image": "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg",
+      "description": "Global leader in custom & universal hearing protection. Silicone earplugs for shooting, music, sleep, swim, industry. 50+ years of innovation.",
+      "telephone": "+1-303-447-2619",
+      "email": "info@earinc.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "5763 Arapahoe Ave. STE L or M",
+        "addressLocality": "Boulder",
+        "addressRegion": "CO",
+        "postalCode": "80303",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 40.016397,
+        "longitude": -105.218618
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+          "opens": "08:00",
+          "closes": "16:30"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Friday",
+          "opens": "08:00",
+          "closes": "12:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Saturday", "Sunday"],
+          "opens": "00:00",
+          "closes": "00:00"
+        }
+      ],
+      "priceRange": "$$",
+      "sameAs": [
+        "https://x.com/earplugsforyou",
+        "https://www.facebook.com/earplugsforyou/",
+        "https://www.youtube.com/@e.a.r.customizedhearing5165"
+      ],
+      "hasMap": [
+        {
+          "@type": "Map",
+          "name": "Google Maps – E.A.R. Customized Hearing",
+          "url": "https://maps.app.goo.gl/ujWydZ9UtBZhJLLv5"
+        },
+        {
+          "@type": "Map",
+          "name": "Apple Maps – E.A.R. Customized Hearing",
+          "url": "https://maps.apple.com/place?address=5763%20Arapahoe%20Avenue,%20Unit%20L,%20Boulder,%20CO%20%2080303,%20United%20States&coordinate=40.016397,-105.218618&name=E.A.R%20Customized%20Hearing&place-id=I2AEC2E885040F150&map=explore"
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://earinc.com/#website",
+      "url": "https://earinc.com",
+      "name": "EAR Customized Hearing Protection",
+      "publisher": { "@id": "https://earinc.com/#organization" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://earinc.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://ear-customized-hearing-protection.github.io/earinc/#webpage",
+      "url": "https://ear-customized-hearing-protection.github.io/earinc/",
+      "name": "EAR Hearing Protection – Links, Products & Resources",
+      "description": "Custom & universal earplugs for all applications. Find providers, products, and hearing tips from E.A.R. Customized Hearing",
+      "isPartOf": { "@id": "https://earinc.com/#website" },
+      "breadcrumb": { "@id": "https://ear-customized-hearing-protection.github.io/earinc/#breadcrumb" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://ear-customized-hearing-protection.github.io/earinc/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://ear-customized-hearing-protection.github.io/earinc/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 
-  <script type="application/ld+json">
-  {
+<!-- Dynamic News Feed Schema + Display -->
+<script>
+const RSS_URL = 'https://earinc.com/feed/';
+const PROXY_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+const FALLBACK_LOGO = 'https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg';
+
+fetch(PROXY_URL)
+  .then(r => r.json())
+  .then(data => {
+    if (data.status !== 'ok' || !data.items) throw new Error('Bad response');
+    const items = data.items.slice(0, 5);
+    renderFeed(items);
+    injectSchema(items);
+  })
+  .catch(() => {
+    console.warn('RSS proxy failed – using static fallback');
+    const fallback = [
+      {
+        title: "Custom Electronic Earplugs for Shooting & Communication",
+        link: "https://earinc.com/custom-electronic-earplugs/",
+        pubDate: "2025-11-01T00:00:00",
+        description: "Explore advanced electronic earplugs that amplify speech while blocking harmful noise...",
+        enclosure: { url: "https://earinc.com/wp-content/uploads/electronic-earplugs.jpg" }
+      },
+      {
+        title: "Best Earplugs for Sleeping: Silicone Custom Fit",
+        link: "https://earinc.com/earplugs-for-sleeping/",
+        pubDate: "2025-10-15T00:00:00",
+        description: "Get deep, uninterrupted sleep with custom-molded silicone earplugs...",
+        enclosure: { url: "https://earinc.com/wp-content/uploads/sleep-earplugs.jpg" }
+      },
+      {
+        title: "Universal Fit vs Custom Earplugs: Which Is Right for You?",
+        link: "https://earinc.com/universal-vs-custom/",
+        pubDate: "2025-09-20T00:00:00",
+        description: "Compare comfort, protection, and cost of universal and custom hearing solutions...",
+        enclosure: { url: "https://earinc.com/wp-content/uploads/universal-custom.jpg" }
+      },
+      {
+        title: "Musicians Trust EAR: Custom In-Ear Monitors & Protection",
+        link: "https://earinc.com/musicians-earplugs/",
+        pubDate: "2025-08-10T00:00:00",
+        description: "Preserve your hearing and sound quality with musician-grade earplugs...",
+        enclosure: { url: "https://earinc.com/wp-content/uploads/musicians-earplugs.jpg" }
+      },
+      {
+        title: "Industrial Hearing Protection: On-Site Corporate Fittings",
+        link: "https://earinc.com/industrial-hearing-protection/",
+        pubDate: "2025-07-05T00:00:00",
+        description: "OSHA-compliant custom earplugs with on-site group fittings for factories and plants...",
+        enclosure: { url: "https://earinc.com/wp-content/uploads/industrial-earplugs.jpg" }
+      }
+    ];
+    renderFeed(fallback);
+    injectSchema(fallback);
+  });
+
+function renderFeed(items) {
+  const feedDiv = document.getElementById('rss-feed');
+  let html = `<h3>Latest from EAR Customized Hearing</h3>`;
+  items.forEach(item => {
+    const date = new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const desc = (item.description || '').replace(/<[^>]*>/g, '').trim().substring(0, 160) + '...';
+    const img = item.enclosure?.url || FALLBACK_LOGO;
+
+    html += `
+      <div class="rss-item">
+        <h4><a href="${item.link}" target="_blank">${item.title}</a></h4>
+        <div class="rss-date">${date}</div>
+        <div class="rss-desc">${desc}</div>
+      </div>`;
+  });
+  feedDiv.innerHTML = html;
+}
+
+function injectSchema(items) {
+  const newsItems = items.map((it, i) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "item": {
+      "@type": "NewsArticle",
+      "headline": it.title,
+      "url": it.link,
+      "datePublished": new Date(it.pubDate).toISOString().split('T')[0],
+      "description": (it.description || '').replace(/<[^>]*>/g, '').trim().substring(0, 200) + "...",
+      "image": it.enclosure?.url || FALLBACK_LOGO,
+      "author": { "@type": "Person", "name": "EAR Team" },
+      "publisher": { "@id": "https://earinc.com/#organization" }
+    }
+  }));
+
+  const schema = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": ["MedicalBusiness", "LocalBusiness"],
-        "@id": "https://earinc.com/#organization",
-        "name": "EAR Customized Hearing Protection",
-        "url": "https://earinc.com",
-        "logo": "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg",
-        "image": "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg",
-        "description": "Global leader in custom & universal hearing protection. Silicone earplugs for shooting, music, sleep, swim, industry. 50+ years of innovation.",
-        "telephone": "+1-3303-447-2619",
-        "email": "info@earinc.com",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "5763 Arapahoe Ave. STE L or M",
-          "addressLocality": "Boulder",
-          "addressRegion": "CO",
-          "postalCode": "80303",
-          "addressCountry": "US"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 40.016397,
-          "longitude": -105.218618
-        },
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"],
-            "opens": "08:00",
-            "closes": "16:30",
-            "dayOfWeek": ["Friday"],
-            "opens": "08:00",
-            "closes": "12:00"
-          }
-        ],
-        "priceRange": "$$",
-        "sameAs": [
-          "https://x.com/earplugsforyou",
-          "https://www.facebook.com/earplugsforyou/",
-          "https://www.youtube.com/@e.a.r.customizedhearing5165",
-   
-        ],
-        "hasMap": [
-          {
-            "@type": "Map",
-            "name": "Google Maps – E.A.R. Customized Hearing",
-            "url": "https://maps.app.goo.gl/ujWydZ9UtBZhJLLv5"
-          },
-          {
-            "@type": "Map",
-            "name": "Apple Maps – E.A.R. Customized Hearing",
-            "url": "https://maps.apple.com/place?address=5763%20Arapahoe%20Avenue,%20Unit%20L,%20Boulder,%20CO%20%2080303,%20United%20States&coordinate=40.016397,-105.218618&name=E.A.R%20Customized%20Hearing&place-id=I2AEC2E885040F150&map=explore"
-          }
-        ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://earinc.com/#website",
-        "url": "https://earinc.com",
-        "name": "EAR Customized Hearing Protection",
-        "publisher": { "@id": "https://earinc.com/#organization" },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://earinc.com/search?q={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://ear-customized-hearing-protection.github.io/earinc/#webpage",
-        "url": "https://ear-customized-hearing-protection.github.io/earinc/",
-        "name": "EAR Hearing Protection – Links, Products & Resources",
-        "description": "Custom & universal earplugs for all applications. Find providers, products, and hearing tips from E.A.R. Customized Hearing",
-        "isPartOf": { "@id": "https://earinc.com/#website" },
-        "breadcrumb": { "@id": "https://ear-customized-hearing-protection.github.io/earinc/#breadcrumb" },
-        "primaryImageOfPage": {
-          "@type": "ImageObject",
-          "url": "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg"
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://ear-customized-hearing-protection.github.io/earinc/",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://ear-customized-hearing-protection.github.io/earinc/"
-          }
-        ]
-      }
-    ]
-  }
-  </script>
+    "@type": "ItemList",
+    "@id": "https://ear-customized-hearing-protection.github.io/earinc/#newsfeed",
+    "name": "Latest from EAR Customized Hearing",
+    "description": "Hearing protection tips, product updates, and industry insights.",
+    "itemListElement": newsItems
+  };
 
-  <script>
-  // Auto-pull EAR blog/feed (update RSS_URL if you have one; fallback provided)
-  const RSS_URL = 'https://earinc.com/feed/'; // Replace if live
-  const PROXY_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+  const s = document.createElement('script');
+  s.type = "application/ld+json";
+  s.text = JSON.stringify(schema);
+  document.head.appendChild(s);
+}
+</script>
 
-  fetch(PROXY_URL)
-    .then(r => r.json())
-    .then(data => {
-      if (data.status !== 'ok' || !data.items) throw new Error('Bad response');
-      const items = data.items.slice(0, 5);
-      renderFeed(items);
-      injectSchema(items);
-    })
-    .catch(() => {
-      console.warn('RSS proxy failed – using static fallback');
-      const fallback = [
-        {
-          title: "Custom Electronic Earplugs for Shooting & Communication",
-          link: "https://earinc.com/custom-electronic-earplugs/",
-          pubDate: "2025-11-01T00:00:00",
-          description: "Explore advanced electronic earplugs that amplify speech while blocking harmful noise...",
-          enclosure: { url: "https://earinc.com/wp-content/uploads/electronic-earplugs.jpg" }
-        },
-        {
-          title: "Best Earplugs for Sleeping: Silicone Custom Fit",
-          link: "https://earinc.com/earplugs-for-sleeping/",
-          pubDate: "2025-10-15T00:00:00",
-          description: "Get deep, uninterrupted sleep with custom-molded silicone earplugs...",
-          enclosure: { url: "https://earinc.com/wp-content/uploads/sleep-earplugs.jpg" }
-        },
-        {
-          title: "Universal Fit vs Custom Earplugs: Which Is Right for You?",
-          link: "https://earinc.com/universal-vs-custom/",
-          pubDate: "2025-09-20T00:00:00",
-          description: "Compare comfort, protection, and cost of universal and custom hearing solutions...",
-          enclosure: { url: "https://earinc.com/wp-content/uploads/universal-custom.jpg" }
-        },
-        {
-          title: "Musicians Trust EAR: Custom In-Ear Monitors & Protection",
-          link: "https://earinc.com/musicians-earplugs/",
-          pubDate: "2025-08-10T00:00:00",
-          description: "Preserve your hearing and sound quality with musician-grade earplugs...",
-          enclosure: { url: "https://earinc.com/wp-content/uploads/musicians-earplugs.jpg" }
-        },
-        {
-          title: "Industrial Hearing Protection: On-Site Corporate Fittings",
-          link: "https://earinc.com/industrial-hearing-protection/",
-          pubDate: "2025-07-05T00:00:00",
-          description: "OSHA-compliant custom earplugs with on-site group fittings for factories and plants...",
-          enclosure: { url: "https://earinc.com/wp-content/uploads/industrial-earplugs.jpg" }
-        }
-      ];
-      renderFeed(fallback);
-      injectSchema(fallback);
-    });
-
-  function renderFeed(items) {
-    const feedDiv = document.getElementById('rss-feed');
-    let html = `<h3>Latest from EAR Hearing Protection</h3>`;
-    items.forEach(item => {
-      const date = new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      const desc = (item.description || '').replace(/<[^>]*>/g, '').trim().substring(0, 160) + '...';
-      const img = item.enclosure?.url || 'https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg';
-
-      html += `
-        <div class="rss-item">
-          <h4><a href="${item.link}" target="_blank">${item.title}</a></h4>
-          <div class="rss-date">${date}</div>
-          <div class="rss-desc">${desc}</div>
-        </div>`;
-    });
-    feedDiv.innerHTML = html;
-  }
-
-  function injectSchema(items) {
-    const newsItems = items.map((it, i) => ({
-      "@type": "ListItem",
-      "position": i + 1,
-      "item": {
-        "@type": "NewsArticle",
-        "headline": it.title,
-        "url": it.link,
-        "datePublished": new Date(it.pubDate).toISOString().split('T')[0],
-        "description": (it.description || '').replace(/<[^>]*>/g, '').trim().substring(0, 200) + "...",
-        "image": it.enclosure?.url || "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg",
-        "author": { "@type": "Person", "name": "EAR Team" },
-        "publisher": { "@id": "https://earinc.com/#organization" }
-      }
-    }));
-
-    const schema = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "@id": "https://ear-customized-hearing-protection.github.io/earinc/#newsfeed",
-      "name": "Latest from EAR Customized Hearing",
-      "description": "Hearing protection tips, product updates, and industry insights.",
-      "itemListElement": newsItems
-    };
-
-    const s = document.createElement('script');
-    s.type = "application/ld+json";
-    s.text = JSON.stringify(schema);
-    document.head.appendChild(s);
-  }
-  </script>
 </head>
 
 <body>
