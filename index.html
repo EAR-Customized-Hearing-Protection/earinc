@@ -22,7 +22,7 @@
   <meta property="og:title" content="EAR Customized Hearing Protection" />
   <meta property="og:description" content="Custom silicone earplugs & universal-fit hearing protection for all applications. Trusted worldwide since 1971 – EAR, Inc." />
   <meta property="og:url" content="https://earinc.com" />
-  <meta property="og:image" content="https://earinc.com/logo.png" />
+  <meta property="og:image" content="https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg" />
   <meta property="og:site_name" content="EAR, Inc." />
 
   <!-- Canonical URL (update to your live microsite URL) -->
@@ -173,8 +173,8 @@
         "@id": "https://earinc.com/#organization",
         "name": "EAR Customized Hearing Protection",
         "url": "https://earinc.com",
-        "logo": "https://earinc.com/logo.png",
-        "image": "https://earinc.com/logo.png",
+        "logo": "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg",
+        "image": "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg",
         "description": "Global leader in custom & universal hearing protection. Silicone earplugs for shooting, music, sleep, swim, industry. 50+ years of innovation.",
         "telephone": "+1-303-530-9990",
         "email": "info@earinc.com",
@@ -320,7 +320,7 @@
     items.forEach(item => {
       const date = new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       const desc = (item.description || '').replace(/<[^>]*>/g, '').trim().substring(0, 160) + '...';
-      const img = item.enclosure?.url || 'https://earinc.com/logo.png';
+      const img = item.enclosure?.url || 'https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg';
 
       html += `
         <div class="rss-item">
@@ -342,7 +342,7 @@
         "url": it.link,
         "datePublished": new Date(it.pubDate).toISOString().split('T')[0],
         "description": (it.description || '').replace(/<[^>]*>/g, '').trim().substring(0, 200) + "...",
-        "image": it.enclosure?.url || "https://earinc.com/logo.png",
+        "image": it.enclosure?.url || "https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg",
         "author": { "@type": "Person", "name": "EAR Team" },
         "publisher": { "@id": "https://earinc.com/#organization" }
       }
@@ -367,7 +367,7 @@
 
 <body>
   <header>
-    <img src="https://earinc.com/logo.png" alt="EAR, Inc. Logo">
+    <img src="https://earinc.com/wp-content/uploads/2025/02/ear-custom-earplugs-logo-50years.jpg" alt="EAR, Inc. Logo">
     <h1><a href="https://earinc.com/">EAR Customized Hearing Protection</a></h1>
     <h4>Custom & Universal Earplugs – Trusted Worldwide Since 1971</h4>
   </header>
