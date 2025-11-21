@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# This microsite is 100% public and designed to be indexed
+Sitemap: https://ear-customized-hearing-protection.github.io/earinc/sitemap.xml
