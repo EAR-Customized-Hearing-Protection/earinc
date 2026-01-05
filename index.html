@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<!--[if lte IE 6]><html class="preIE7 preIE8 preIE9"><![endif]-->
+<!DOCTYPE html><!--[if lte IE 6]><html class="preIE7 preIE8 preIE9"><![endif]-->
 <!--[if IE 7]><html class="preIE8 preIE9"><![endif]-->
 <!--[if IE 8]><html class="preIE9"><![endif]-->
 <!--[if gte IE 9]><!--><html><!--<![endif]-->
- 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -116,32 +114,32 @@ header img {
     }
 
     /* RSS feed tweaks – coral links, gold hover */
-    #rss-feed h4 {
+    #rss-feed h4, #press-feed h4 {
       margin-top: 0;
       font-size: 1.3rem;
       color: #0A2A47;
     }
-    .rss-item {
+    .rss-item, .press-item {
       margin: 1rem 0;
       padding-bottom: 1rem;
       border-bottom: 1px solid #eee;
     }
-    .rss-item a {
+    .rss-item a, .press-item a {
       font-weight: 600;
       color: #E06A5E;
       text-decoration: none;
       font-size: 1.1rem;
     }
-    .rss-item a:hover {
+    .rss-item a:hover, .press-item a:hover {
       text-decoration: underline;
       color: #4A90E2;
     }
-    .rss-date {
+    .rss-date, .press-date {
       font-size: 0.85rem;
       color: #6b7280;
       margin: 0.25rem 0;
     }
-    .rss-desc {
+    .rss-desc, .press-desc {
       font-size: 0.95rem;
       color: #374151;
       line-height: 1.5;
@@ -215,7 +213,8 @@ header img {
       "sameAs": [
         "https://x.com/earplugsforyou",
         "https://www.facebook.com/earplugsforyou/",
-        "https://www.youtube.com/@e.a.r.customizedhearing5165"
+        "https://www.youtube.com/@e.a.r.customizedhearing5165",
+        "https://pressadvantage.com/i_organization/ear-inc"
       ],
       "hasMap": [
         {
@@ -271,7 +270,7 @@ header img {
 }
 </script>
 
-<!-- Dynamic News Feed Schema + Display -->
+<!-- Dynamic News Feed (Blog) Schema + Display -->
 <script>
 const RSS_URL = 'https://earinc.com/feed/';
 const PROXY_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
@@ -282,8 +281,8 @@ fetch(PROXY_URL)
   .then(data => {
     if (data.status !== 'ok' || !data.items) throw new Error('Bad response');
     const items = data.items.slice(0, 5);
-    renderFeed(items);
-    injectSchema(items);
+    renderFeed(items, 'rss-feed');
+    injectSchema(items, 'blog');
   })
   .catch(() => {
     console.warn('RSS proxy failed – using static fallback');
@@ -324,29 +323,31 @@ fetch(PROXY_URL)
         enclosure: { url: "https://earinc.com/wp-content/uploads/industrial-earplugs.jpg" }
       }
     ];
-    renderFeed(fallback);
-    injectSchema(fallback);
+    renderFeed(fallback, 'rss-feed');
+    injectSchema(fallback, 'blog');
   });
 
-function renderFeed(items) {
-  const feedDiv = document.getElementById('rss-feed');
-  let html = `<h3>Latest from EAR Customized Hearing</h3>`;
+function renderFeed(items, containerId) {
+  const feedDiv = document.getElementById(containerId);
+  let html = containerId === 'rss-feed' ? `<h3>Latest from EAR Customized Hearing</h3>` : `<h3>Press Releases</h3>`;
   items.forEach(item => {
     const date = new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const desc = (item.description || '').replace(/<[^>]*>/g, '').trim().substring(0, 160) + '...';
-    const img = item.enclosure?.url || FALLBACK_LOGO;
+    const itemClass = containerId === 'rss-feed' ? 'rss-item' : 'press-item';
+    const dateClass = containerId === 'rss-feed' ? 'rss-date' : 'press-date';
+    const descClass = containerId === 'rss-feed' ? 'rss-desc' : 'press-desc';
 
     html += `
-      <div class="rss-item">
+      <div class="${itemClass}">
         <h4><a href="${item.link}" target="_blank">${item.title}</a></h4>
-        <div class="rss-date">${date}</div>
-        <div class="rss-desc">${desc}</div>
+        <div class="${dateClass}">${date}</div>
+        <div class="${descClass}">${desc}</div>
       </div>`;
   });
   feedDiv.innerHTML = html;
 }
 
-function injectSchema(items) {
+function injectSchema(items, type) {
   const newsItems = items.map((it, i) => ({
     "@type": "ListItem",
     "position": i + 1,
@@ -365,9 +366,8 @@ function injectSchema(items) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "@id": "https://ear-customized-hearing-protection.github.io/earinc/#newsfeed",
-    "name": "Latest from EAR Customized Hearing",
-    "description": "Hearing protection tips, product updates, and industry insights.",
+    "name": type === 'blog' ? "Latest from EAR Customized Hearing" : "Press Releases",
+    "description": type === 'blog' ? "Hearing protection tips, product updates, and industry insights." : "Official press releases from EAR Customized Hearing.",
     "itemListElement": newsItems
   };
 
@@ -376,6 +376,25 @@ function injectSchema(items) {
   s.text = JSON.stringify(schema);
   document.head.appendChild(s);
 }
+</script>
+
+<!-- Press Releases Feed Script -->
+<script>
+const PRESS_RSS_URL = 'https://app.pressadvantage.com/feeds/channel/ear-inc?organization=ear-inc';
+const PRESS_PROXY_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(PRESS_RSS_URL)}`;
+
+fetch(PRESS_PROXY_URL)
+  .then(r => r.json())
+  .then(data => {
+    if (data.status !== 'ok' || !data.items) throw new Error('Bad response');
+    const items = data.items.slice(0, 5);
+    renderFeed(items, 'press-feed');
+    injectSchema(items, 'press');
+  })
+  .catch(err => {
+    console.warn('Press feed failed:', err);
+    document.getElementById('press-feed').innerHTML = '<p>Unable to load press releases at this time.</p>';
+  });
 </script>
 
 </head>
@@ -389,9 +408,8 @@ function injectSchema(items) {
 
   <div class="container">
 
-    <!-- About -->
-    <section>
-  <h3>EAR Customized Hearing</h3>
+<!-- About -->
+<section>  <h3>EAR Customized Hearing</h3>
      <h4>Global Leader in Custom & Universal Hearing Protection</h4>
   <p><strong>EAR Customized Hearing</strong> is recognized worldwide for delivering <strong>high-quality custom and universal-fit hearing protection</strong> that enhances the hearing experience, supports hearing healthcare professionals, and drives innovation in the industry. With certifications for <strong>Europe, USA, and Australia</strong>, our products meet the highest global standards for safety and performance.</p>
   
@@ -404,33 +422,35 @@ function injectSchema(items) {
   <p>For over <strong>50 years</strong>, E.A.R. Customized Hearing has led with innovation, quality, and a network of <strong>2,500+ certified providers globally</strong>. Whether you need <strong>custom earplugs for sleeping, swimming, music, or industrial use</strong> — or <strong>universal-fit instant protection</strong> — EAR Customized Hearing delivers <strong>hearing protection you can trust</strong>.</p>
 </section>
 
-    <!-- Philosophy -->
-    <section>
-      <h3>Our Protection Philosophy</h3>
-      <p>Hearing is irreplaceable. From <strong>custom electronic earplugs</strong> to <strong>universal-fit instant protection</strong>, we use the same advanced silicone technology across all products. Whether you need <strong>Bluetooth-enabled</strong>, <strong>hearing aid combos</strong>, or <strong>OSHA-compliant industrial solutions</strong>, EAR Customized Hearing delivers comfort, performance, and peace of mind.</p>
-    </section>
+<!-- Philosophy -->
+<section>
+  <h3>Our Protection Philosophy</h3>
+  <p>Hearing is irreplaceable. From <strong>custom electronic earplugs</strong> to <strong>universal-fit instant protection</strong>, we use the same advanced silicone technology across all products. Whether you need <strong>Bluetooth-enabled</strong>, <strong>hearing aid combos</strong>, or <strong>OSHA-compliant industrial solutions</strong>, EAR Customized Hearing delivers comfort, performance, and peace of mind.</p>
+</section>
 
-    <!-- Why Choose -->
-    <section>
-      <h3>Why Professionals & Individuals Choose EAR Customized Hearing</h3>
-      <p>With <strong>on-site corporate fittings</strong>, <strong>global distribution</strong>, and <strong>innovative designs</strong> (founded 1971), EAR Customized Hearing sets the standard. Trusted by musicians, hunters, swimmers, factories, and sleepers worldwide. Same-day universal options available — same tech as our custom molds.</p>
-    </section>
+<!-- Why Choose -->
+<section>
+  <h3>Why Professionals & Individuals Choose EAR Customized Hearing</h3>
+  <p>With <strong>on-site corporate fittings</strong>, <strong>global distribution</strong>, and <strong>innovative designs</strong> (founded 1971), EAR Customized Hearing sets the standard. Trusted by musicians, hunters, swimmers, factories, and sleepers worldwide. Same-day universal options available — same tech as our custom molds.</p>
+</section>
 
-    <!-- Visit / Map -->
-    <section>
-      <h3>Visit Our Headquarters</h3>
-      <p><strong>E.A.R. Customized Hearing</strong><br>
-         5763 Arapahoe Ave. STE L or M<br>
-         Boulder, CO 80303<br>
-         <a href="tel:+13034472619">(303)447-2619</a></p>
+<!-- Visit / Map -->
+<section>
+  <h3>Visit Our Headquarters</h3>
+  <p><strong>E.A.R. Customized Hearing</strong>
 
-      <div class="platform-links">
-        <a href="https://maps.app.goo.gl/ujWydZ9UtBZhJLLv5" target="_blank">Open in Google Maps</a>
-        <a href="https://maps.apple.com/place?address=5763%20Arapahoe%20Avenue,%20Unit%20L,%20Boulder,%20CO%20%2080303,%20United%20States&coordinate=40.016397,-105.218618&name=E.A.R%20Customized%20Hearing&place-id=I2AEC2E885040F150&map=explore" target="_blank">Open in Apple Maps</a>
-      </div>
+     5763 Arapahoe Ave. STE L or M
 
-      <div class="map-container">
-  <iframe 
+     Boulder, CO 80303
+
+     <a href="tel:+13034472619">(303)447-2619</a></p>
+
+  <div class="platform-links">
+    <a href="https://maps.app.goo.gl/ujWydZ9UtBZhJLLv5" target="_blank">Open in Google Maps</a>
+    <a href="https://maps.apple.com/place?address=5763%20Arapahoe%20Avenue,%20Unit%20L,%20Boulder,%20CO%20%2080303,%20United%20States&coordinate=40.016397,-105.218618&name=E.A.R%20Customized%20Hearing&place-id=I2AEC2E885040F150&map=explore" target="_blank">Open in Apple Maps</a>
+  </div>
+
+  <div class="map-container">  <iframe 
     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3055.6451417649946!2d-105.22162047281257!3d40.01637340162893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x876bf209cc3012bb%3A0xe98dbab27b916ff0!2sE.A.R.%20Customized%20Hearing!5e0!3m2!1sen!2sus!4v1763148699721!5m2!1sen!2sus" 
     width="100%" 
     height="350" 
@@ -442,66 +462,71 @@ function injectSchema(items) {
 </div>
     </section>
 
-    <!-- Find Provider / Directories -->
-    <section>
-      <h3>Find a Provider Near You</h3>
-      <p>With 2,500+ global partners, get custom molds locally.</p>
-      <div class="platform-links">
-       <a href="https://earinc.com/looking-for-a-provider/" target="_blank">Provider Locator</a>
-      </div>
-    </section>
-       <section>
-      <h3>Hearing Protection For</h3>
-      <div class="platform-links">
-       <a href="https://earinc.com/custom-fit-industrial-hearing-protection-programs/" target="_blank">Industrial Applications</a>
-       <a href="https://earinc.com/hunt-shoot/" target="_blank">Hunting and Shooting</a>
-       <a href="https://earinc.com/custom-ear-plugs/musicians-2/">Musicians</a>
-        <a href="https://earinc.com/custom-ear-plugs/swimming/">Swimming and Watersports</a>
-        <a href="https://earinc.com/sleeping/">Sleeping</a>
-        <a href="https://earinc.com/product-category/motor-sports/">Motorsports</a>
-       <a href="https://earinc.com/product-category/military-first-responders-law-enforcement/">Military/First Responders/Law Enforcement</a>
-        <a href="https://earinc.com/tactical-ear-protection-communication-headsets/">Communications and Tactical</a>
-        <a href="https://earinc.com/product-category/children-pediatrics/">Kids</a>
-      </div>
-    </section>
+<!-- Find Provider / Directories -->
+<section>
+  <h3>Find a Provider Near You</h3>
+  <p>With 2,500+ global partners, get custom molds locally.</p>
+  <div class="platform-links">
+   <a href="https://earinc.com/looking-for-a-provider/" target="_blank">Provider Locator</a>
+  </div>
+</section>
+   <section>
+  <h3>Hearing Protection For</h3>
+  <div class="platform-links">
+   <a href="https://earinc.com/custom-fit-industrial-hearing-protection-programs/" target="_blank">Industrial Applications</a>
+   <a href="https://earinc.com/hunt-shoot/" target="_blank">Hunting and Shooting</a>
+   <a href="https://earinc.com/custom-ear-plugs/musicians-2/">Musicians</a>
+    <a href="https://earinc.com/custom-ear-plugs/swimming/">Swimming and Watersports</a>
+    <a href="https://earinc.com/sleeping/">Sleeping</a>
+    <a href="https://earinc.com/product-category/motor-sports/">Motorsports</a>
+   <a href="https://earinc.com/product-category/military-first-responders-law-enforcement/">Military/First Responders/Law Enforcement</a>
+    <a href="https://earinc.com/tactical-ear-protection-communication-headsets/">Communications and Tactical</a>
+    <a href="https://earinc.com/product-category/children-pediatrics/">Kids</a>
+  </div>
+</section>
 
-    <!-- Products -->
-    <section>
-      <h3>Featured Products</h3>
-      <div class="platform-links">
-        <a href="https://earinc.com/custom-electronic-earplugs/" target="_blank">Custom Electronic Earplugs</a>
-        <a href="https://earinc.com/custom-wireless-bluetooth-earplugs/" target="_blank">Custom Bluetooth Earplugs</a>
-        <a href="https://earinc.com/custom-earplug-sleeves/" target="_blank">Custom Earplug Sleeves</a>
-        <a href="https://earinc.com/product/soundgear-phantom/" target="_blank">Hearing Aid + Custom Earplug Combos</a>
-        <a href="https://earinc.com/swim-earplugs/" target="_blank">For Swimming</a>
-        <a href="https://earinc.com/musicians-earplugs/" target="_blank">For Musicians</a>
-      </div>
-    </section>
+<!-- Products -->
+<section>
+  <h3>Featured Products</h3>
+  <div class="platform-links">
+    <a href="https://earinc.com/custom-electronic-earplugs/" target="_blank">Custom Electronic Earplugs</a>
+    <a href="https://earinc.com/custom-wireless-bluetooth-earplugs/" target="_blank">Custom Bluetooth Earplugs</a>
+    <a href="https://earinc.com/custom-earplug-sleeves/" target="_blank">Custom Earplug Sleeves</a>
+    <a href="https://earinc.com/product/soundgear-phantom/" target="_blank">Hearing Aid + Custom Earplug Combos</a>
+    <a href="https://earinc.com/swim-earplugs/" target="_blank">For Swimming</a>
+    <a href="https://earinc.com/musicians-earplugs/" target="_blank">For Musicians</a>
+  </div>
+</section>
 
-    <!-- Social -->
-    <section>
-      <h3>Connect with EAR Customized Hearing</h3>
-      <p>Follow for tips, new products, and hearing health:</p>
-      <div class="platform-links">
-        <a href="https://x.com/earplugsforyou" target="_blank">X</a>
-        <a href="https://www.facebook.com/earplugsforyou/" target="_blank">Facebook</a>
-       <a href="https://www.youtube.com/@e.a.r.customizedhearing5165" target="_blank">YouTube</a>
-      </div>
-    </section>
+<!-- Social -->
+<section>
+  <h3>Connect with EAR Customized Hearing</h3>
+  <p>Follow for tips, new products, and hearing health:</p>
+  <div class="platform-links">
+    <a href="https://x.com/earplugsforyou" target="_blank">X</a>
+    <a href="https://www.facebook.com/earplugsforyou/" target="_blank">Facebook</a>
+   <a href="https://www.youtube.com/@e.a.r.customizedhearing5165" target="_blank">YouTube</a>
+  </div>
+</section>
 
-    <!-- Search Mentions -->
-    <section>
-      <h3>All EAR Customized Hearing Mentions</h3>
-      <div class="platform-links">
-        <a href="https://www.google.com/search?q=ear+customized+hearing+&sca_esv=f517df8b24517ced&ei=_IkXaa2YAfms0PEP3teYmAc&ved=0ahUKEwithufptvKQAxV5FjQIHd4rBnMQ4dUDCBE&uact=5&oq=ear+customized+hearing+&gs_lp=Egxnd3Mtd2l6LXNlcnAiF2VhciBjdXN0b21pemVkIGhlYXJpbmcgMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yAhAmMgsQABiABBiGAxiKBTILEAAYgAQYhgMYigUyCxAAGIAEGIYDGIoFMgsQABiABBiGAxiKBTIFEAAY7wVIyhVQyQRYyQRwAXgBkAEAmAFYoAFYqgEBMbgBA8gBAPgBAZgCAqACYcICChAAGLADGNYEGEeYAwCIBgGQBgiSBwEyoAfVB7IHATG4B1_CBwUwLjEuMcgHBg&sclient=gws-wiz-serp" target="_blank">Google</a>
-        <a href="https://www.bing.com/search?q=ear%20customized%20hearing&qs=n&form=QBRE&sp=-1&lq=0&pq=ear%20customized%20hearing&sc=9-22&sk=&cvid=8BD52C0294A946CB998B93E07DA9E7CD" target="_blank">Bing</a>
-      </div>
-    </section>
+<!-- Search Mentions -->
+<section>
+  <h3>All EAR Customized Hearing Mentions</h3>
+  <div class="platform-links">
+    <a href="https://www.google.com/search?q=ear+customized+hearing+&sca_esv=f517df8b24517ced&ei=_IkXaa2YAfms0PEP3teYmAc&ved=0ahUKEwithufptvKQAxV5FjQIHd4rBnMQ4dUDCBE&uact=5&oq=ear+customized+hearing+&gs_lp=Egxnd3Mtd2l6LXNlcnAiF2VhciBjdXN0b21pemVkIGhlYXJpbmcgMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yAhAmMgsQABiABBiGAxiKBTILEAAYgAQYhgMYigUyCxAAGIAEGIYDGIoFMgsQABiABBiGAxiKBTIFEAAY7wVIyhVQyQRYyQRwAXgBkAEAmAFYoAFYqgEBMbgBA8gBAPgBAZgCAqACYcICChAAGLADGNYEGEeYAwCIBgGQBgiSBwEyoAfVB7IHATG4B1_CBwUwLjEuMcgHBg&sclient=gws-wiz-serp" target="_blank">Google</a>
+    <a href="https://www.bing.com/search?q=ear%20customized%20hearing&qs=n&form=QBRE&sp=-1&lq=0&pq=ear%20customized%20hearing&sc=9-22&sk=&cvid=8BD52C0294A946CB998B93E07DA9E7CD" target="_blank">Bing</a>
+  </div>
+</section>
 
-    <!-- RSS Feed -->
-    <section>
-      <div id="rss-feed">Loading latest posts...</div>
-    </section>
+<!-- RSS Feed (Blog) -->
+<section>
+  <div id="rss-feed">Loading latest posts...</div>
+</section>
+
+<!-- Press Releases Section -->
+<section>
+  <div id="press-feed">Loading press releases...</div>
+</section>
 
   </div>
 
