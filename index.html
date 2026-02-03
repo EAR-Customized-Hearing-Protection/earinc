@@ -329,7 +329,7 @@ fetch(PROXY_URL)
 
 function renderFeed(items, containerId) {
   const feedDiv = document.getElementById(containerId);
-  let html = containerId === 'rss-feed' ? `<h3>Latest from EAR Customized Hearing</h3>` : `<h3>Press Releases</h3>`;
+  let html = containerId === 'rss-feed' ? `<h3>Latest from EAR Customized Hearing</h3>` : `<h3>EAR Customized Hearing Press Releases</h3>`;
   items.forEach(item => {
     const date = new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const desc = (item.description || '').replace(/<[^>]*>/g, '').trim().substring(0, 160) + '...';
@@ -521,14 +521,14 @@ fetch(PRESS_PROXY_URL)
 
 <!-- Find Provider / Directories -->
 <section>
-  <h3>Find a Provider Near You</h3>
+  <h3>Find an EAR Customized Hearing Provider Near You</h3>
   <p>With 2,500+ global partners, get custom molds locally.</p>
   <div class="platform-links">
    <a href="https://earinc.com/looking-for-a-provider/" target="_blank">Provider Locator</a>
   </div>
 </section>
    <section>
-  <h3>Hearing Protection For</h3>
+  <h3>EAR Customized Hearing Provides Protection For</h3>
   <div class="platform-links">
    <a href="https://earinc.com/custom-fit-industrial-hearing-protection-programs/" target="_blank">Industrial Applications</a>
    <a href="https://earinc.com/hunt-shoot/" target="_blank">Hunting and Shooting</a>
@@ -544,7 +544,7 @@ fetch(PRESS_PROXY_URL)
 
 <!-- Products -->
 <section>
-  <h3>Featured Products</h3>
+  <h3>EAR Customized Hearing Featured Products</h3>
   <div class="platform-links">
     <a href="https://earinc.com/custom-electronic-earplugs/" target="_blank">Custom Electronic Earplugs</a>
     <a href="https://earinc.com/custom-wireless-bluetooth-earplugs/" target="_blank">Custom Bluetooth Earplugs</a>
